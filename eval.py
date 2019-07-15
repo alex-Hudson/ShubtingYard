@@ -84,56 +84,80 @@ class ShuntingYard:
         try:
             int(input)
             return True
-        except TypeError:
+        except ValueError:
             return False
 
     def find_occurrences(self, s, ch):
         return [i for i, letter in enumerate(s) if letter == ch]
 
     def seperate_operators_from_numbers(self, expression):
-        # split string
-        # self.split_string(expression)
-
         # check if operator or number
         operators = re.findall("[+/*()-]", expression)
-        numbers = re.findall(r'\d+', expression)
+        numbers = [int(i) for i in re.findall(r'\d+', expression)]
 
-        tokens = re.findall("[+/*()-]|\d+", expression)
-        for token in tokens:
-            if token == "(":
-                operators.insert(0, token)
-            elif token == ")":
+        # put in dict
+        to_return = {}
+        to_return["operators"] = operators
+        to_return["numbers"] = numbers
+        return to_return
+
+    def peek(self, stack):
+        return stack[-1] if stack else None
+
+    def apply_operator(self, operators, values):
+        operator = operators.pop()
+        right = values.pop()
+        left = values.pop()
+        values.append(eval("{0}{1}{2}".format(left, operator, right)))
+
+    def greater_precedence(self, op1, op2):
+        precedences = {'+': 0, '-': 0, '*': 1, '/': 1}
+        return precedences[op1] > precedences[op2]
+
+    def calculate(self, expression):
+        operators = []
+        values = []
+        for token in expression:
+            if self.is_number(token):
+                values.append(int(token))
+            elif token == '(':
                 operators.append(token)
-            elif token == "x":
-                # assign first input var to x
-            elif token == "y":
-                # assign second input var to y
+            elif token == ')':
+                top = self.peek(operators)
+                while top is not None and top != '(':
+                    self.apply_operator(operators, values)
+                    top = self.peek(operators)
+                operators.pop()  # Discard the '('
+            else:
+                # Operator
+                top = self.peek(operators)
+                while top is not None and top not in "()" and self.greater_precedence(top, token):
+                    self.apply_operator(operators, values)
+                    top = self.peek(operators)
+                operators.append(token)
+        while self.peek(operators) is not None:
+            self.apply_operator(operators, values)
 
-                # xs = self.findOccurrences(expression, 'x')
-                # ys = self.findOccurrences(expression, 'y')
+        return values[0]
 
-        print(operators)
-        print(numbers)
-        print(xs)
-        print(ys)
+    def eval(self, expression, args):
+        expression = expression.replace('x', str(args[0]))
+        expression = expression.replace('y', str(args[1]))
 
-        # put operators in dict
+        #nums_and_operators = self.seperate_operators_from_numbers(expression)
+        x = args[0]
+        y = args[1]
+        print(x, y)
 
-        # put numbers in dict
-
-        # Return dict with numbers and values
-
-    def eval(self, expression):
-        obj = self.seperate_operators_from_numbers(expression)
-        print(obj.operators)
-        print(obj.numbers)
+        answer = self.calculate(expression)
 
 
-test = CmdLineParse()
-expression = test.get_expression()
+cmd_parse = CmdLineParse()
+expression = cmd_parse.get_expression()
+args = cmd_parse.get_inputs()
 print(expression)
 shunting_yard = ShuntingYard()
-shunting_yard.eval(expression)
+shunting_yard.eval(expression, args)
 
 # args = test.get_inputs()
 # test.do_calc(expression, args)
