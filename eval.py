@@ -57,6 +57,7 @@ class CmdLineParse:
             y = inputs['y']
             to_return = eval(expression)
             outputs[index]['calc'] = to_return
+        print(outputs[4]['calc'])
         self.outputs = outputs
 
     def get_range(self, number_range, number, key):
@@ -101,6 +102,12 @@ class ShuntingYard:
         to_return["numbers"] = numbers
         return to_return
 
+    def get_function(self, op):
+        ops = {"+": (lambda x, y: x+y),
+               "-": (lambda x, y: x-y),
+               "*": (lambda x, y: x*y)}
+        return ops[op]
+
     def peek(self, stack):
         return stack[-1] if stack else None
 
@@ -108,7 +115,9 @@ class ShuntingYard:
         operator = operators.pop()
         right = values.pop()
         left = values.pop()
-        values.append(eval("{0}{1}{2}".format(left, operator, right)))
+        func = self.get_function(operator)
+        answer = func(left, right)
+        values.append(answer)
 
     def greater_precedence(self, op1, op2):
         precedences = {'+': 0, '-': 0, '*': 1, '/': 1}
@@ -117,7 +126,8 @@ class ShuntingYard:
     def calculate(self, expression):
         operators = []
         values = []
-        for token in expression:
+        s=re.findall('[+-/*//()]|\d+',expression)
+        for token in s:
             if self.is_number(token):
                 values.append(int(token))
             elif token == '(':
@@ -144,7 +154,7 @@ class ShuntingYard:
         expression = expression.replace('x', str(args[0]))
         expression = expression.replace('y', str(args[1]))
 
-        #nums_and_operators = self.seperate_operators_from_numbers(expression)
+        # nums_and_operators = self.seperate_operators_from_numbers(expression)
         x = args[0]
         y = args[1]
         print(x, y)
@@ -154,6 +164,8 @@ class ShuntingYard:
 
 cmd_parse = CmdLineParse()
 expression = cmd_parse.get_expression()
+args = cmd_parse.get_inputs()
+cmd_parse.do_calc(expression, args)
 args = cmd_parse.get_inputs()
 print(expression)
 shunting_yard = ShuntingYard()
