@@ -57,7 +57,7 @@ class CmdLineParse:
             y = inputs['y']
             to_return = eval(expression)
             outputs[index]['calc'] = to_return
-        print(outputs[4]['calc'])
+        print(outputs[5]['calc'])
         self.outputs = outputs
 
     def get_range(self, number_range, number, key):
@@ -105,7 +105,8 @@ class ShuntingYard:
     def get_function(self, op):
         ops = {"+": (lambda x, y: x+y),
                "-": (lambda x, y: x-y),
-               "*": (lambda x, y: x*y)}
+               "*": (lambda x, y: x*y), 
+               "^": (lambda x,y: x^y)}
         return ops[op]
 
     def peek(self, stack):
@@ -120,13 +121,13 @@ class ShuntingYard:
         values.append(answer)
 
     def greater_precedence(self, op1, op2):
-        precedences = {'+': 0, '-': 0, '*': 1, '/': 1}
+        precedences = {'+': 0, '-': 0, '*': 1, '/': 1, '^': 2}
         return precedences[op1] > precedences[op2]
 
     def calculate(self, expression):
         operators = []
         values = []
-        s=re.findall('[+-/*//()]|\d+',expression)
+        s = re.findall('[+-/*//()]|\d+', expression)
         for token in s:
             if self.is_number(token):
                 values.append(int(token))
@@ -160,12 +161,13 @@ class ShuntingYard:
         print(x, y)
 
         answer = self.calculate(expression)
+        print(answer)
 
 
 cmd_parse = CmdLineParse()
 expression = cmd_parse.get_expression()
 args = cmd_parse.get_inputs()
-cmd_parse.do_calc(expression, args)
+# cmd_parse.do_calc(expression, args)
 args = cmd_parse.get_inputs()
 print(expression)
 shunting_yard = ShuntingYard()
