@@ -105,8 +105,8 @@ class ShuntingYard:
     def get_function(self, op):
         ops = {"+": (lambda x, y: x+y),
                "-": (lambda x, y: x-y),
-               "*": (lambda x, y: x*y), 
-               "^": (lambda x,y: x^y)}
+               "*": (lambda x, y: x*y),
+               "^": (lambda x, y: x**y)}
         return ops[op]
 
     def peek(self, stack):
@@ -127,7 +127,7 @@ class ShuntingYard:
     def calculate(self, expression):
         operators = []
         values = []
-        s = re.findall('[+-/*//()]|\d+', expression)
+        s = re.findall('[\\^]|[+-/*//()]|\d+', expression)
         for token in s:
             if self.is_number(token):
                 values.append(int(token))
