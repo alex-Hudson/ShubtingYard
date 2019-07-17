@@ -6,7 +6,7 @@ import parse
 
 
 class ShuntingYard:
-    precedences = {'+': 0, '-': 0, '*': 1, '/': 1, '^': 2}
+    precedences = {'+': 0, '-': 0, '*': 1, '/': 1, '**': 2}
 
     def __init__(self, expression, args):
         self.eval(expression, args)
@@ -20,14 +20,20 @@ class ShuntingYard:
 
     def seperate_operators_from_numbers(self, expression):
         # Find all numbers and operators and put into list
-        return re.findall(
-            r"[+*-/]| *(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?", expression)
+        exp = re.findall(
+            r"[+*-/()]| *(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?", expression)
+        # Handle **
+        for index, token in enumerate(exp):
+            if token == '*' and exp[index+1] == '*':
+                exp[index] = '**'
+                del exp[index+1]
+        return exp
 
     def get_function(self, op):
         ops = {"+": (lambda x, y: x+y),
                "-": (lambda x, y: x-y),
                "*": (lambda x, y: x*y),
-               "^": (lambda x, y: x**y)}
+               "**": (lambda x, y: x**y)}
         return ops[op]
 
     def peek(self, stack):
