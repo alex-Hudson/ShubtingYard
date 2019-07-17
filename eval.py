@@ -36,11 +36,7 @@ class ShuntingYard:
         ops = {"+": (lambda x, y: x+y),
                "-": (lambda x, y: x-y),
                "*": (lambda x, y: x*y),
-<<<<<<< .merge_file_a08372
                "^": (lambda x, y: x**y)}
-=======
-               "^": (lambda x, y: x ^ y)}
->>>>>>> .merge_file_a03460
         return ops[op]
 
     def peek(self, stack):
