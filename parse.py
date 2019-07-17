@@ -7,11 +7,24 @@ import csv
 
 
 class CmdLineParse:
+    def __init__(self):
+        # Class to parse arguments from command line
+        args = self.get_inputs()
+        self.handle_inputs(args)
+
+    @property
+    # returns args
+    def args(self):
+        return self.args
+
+    @property
+    # returns expression
+    def expression(self):
+        return self.args["expression"]
 
     def parse_file(self):
         reader = csv.reader(open('data.txt'), delimiter=',')
         rows = []
-        items = []
         for row in reader:
             new_row = {}
             new_row['expression'] = row[0]
@@ -23,6 +36,7 @@ class CmdLineParse:
         return rows
 
     def get_inputs(self):
+        # Usze argparse lib to paarse inputs
         parser = argparse.ArgumentParser()
         parser.add_argument("expression", help="expression string")
         parser.add_argument("var1", help="variable 1",
@@ -37,6 +51,7 @@ class CmdLineParse:
         return vars(args)
 
     def handle_inputs(self, args):
+        # If --file given, load from file, else load from data in cmd line
         if args is None:
             print('You have not passed any commands in!')
             return
@@ -58,24 +73,10 @@ class CmdLineParse:
                 elif a == '--veg':
                     print(random.choice(['Carrot', 'Potato', 'Turnip']))
                 else:
-                    return args
-            return to_return
-
-    def get_expression(self):
-        args = sys.argv
-        self.expression = args[1]
-        return self.expression
-
-    def to_num(self, string):
-        # Convert string to either int or float
-        try:
-            ret = int(string)
-        except ValueError:
-            # Try float
-            ret = float(string)
-        return ret
+                    self.args = args
 
     def do_calc(self, expression, args):
+        # Do calc using eval for checking
         x_range = self.get_range([], args[0], 'x')
         self.range = self.get_range(x_range, args[1], 'y')
         to_return = []

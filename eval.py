@@ -8,29 +8,20 @@ import parse
 class ShuntingYard:
     precedences = {'+': 0, '-': 0, '*': 1, '/': 1, '^': 2}
 
-    def split_string(self, string):
-        return [char for char in string]
+    def __init__(self, expression, args):
+        self.eval(expression, args)
 
     def is_number(self, input):
         try:
-            int(input)
+            float(input)
             return True
         except ValueError:
             return False
 
-    def find_occurrences(self, s, ch):
-        return [i for i, letter in enumerate(s) if letter == ch]
-
     def seperate_operators_from_numbers(self, expression):
-        # check if operator or number
-        operators = re.findall("[+/*()-]", expression)
-        numbers = [int(i) for i in re.findall(r'\d+', expression)]
-
-        # put in dict
-        to_return = {}
-        to_return["operators"] = operators
-        to_return["numbers"] = numbers
-        return to_return
+        # Find all numbers and operators and put into list
+        return re.findall(
+            r"[+*-/]| *(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?", expression)
 
     def get_function(self, op):
         ops = {"+": (lambda x, y: x+y),
@@ -56,11 +47,10 @@ class ShuntingYard:
     def calculate(self, expression):
         operators = []
         values = []
-        s = re.findall(
-            r"[+*-/]| *(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?", expression)  # Find all numbers and operators
+        s = self.seperate_operators_from_numbers(expression)
         for token in s:
             if self.is_number(token):
-                values.append(int(token))
+                values.append(float(token))
             elif token == '(':
                 operators.append(token)
             elif token == ')':
@@ -82,12 +72,11 @@ class ShuntingYard:
         return values[0]
 
     def eval(self, expression, args):
-        expression = expression.replace('x', str(args["var1"]))
-        expression = expression.replace('y', str(args["var2"]))
-
-        # nums_and_operators = self.seperate_operators_from_numbers(expression)
         x = args["var1"]
         y = args["var2"]
+        expression = expression.replace('x', str(x))
+        expression = expression.replace('y', str(y))
+
         print(x, y)
 
         answer = self.calculate(expression)
@@ -95,15 +84,7 @@ class ShuntingYard:
 
 
 cmd_parse = parse.CmdLineParse()
-expression = cmd_parse.get_expression()
-args = cmd_parse.get_inputs()
-cmd_parse.handle_inputs(args)
-# cmd_parse.do_calc(expression, args)
-args = cmd_parse.get_inputs()
+expression = cmd_parse.expression
+args = cmd_parse.args
 print(expression)
-shunting_yard = ShuntingYard()
-shunting_yard.eval(expression, args)
-
-# args = test.get_inputs()
-# test.do_calc(expression, args)
-# test.output()
+shunting_yard = ShuntingYard(expression, args)
