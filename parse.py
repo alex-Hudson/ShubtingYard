@@ -1,19 +1,51 @@
 import sys
 import random
+import copy
+import argparse
+import json
+import csv
 
 
 class CmdLineParse:
-    def get_inputs(self):
-        # Function to handle command line usage
-        args = sys.argv
-        # First element of args is the file name, second is formula
-        args = args[2:]
 
-        if len(args) == 0:
+    def parse_file(self):
+        reader = csv.reader(open('data.txt'), delimiter=',')
+        rows = []
+        items = []
+        for row in reader:
+            new_row = {}
+            new_row['expression'] = row[0]
+            new_row['var1'] = row[1]
+            new_row['var2'] = row[2]
+            print(new_row)
+            rows.append(new_row)
+
+        return rows
+
+    def get_inputs(self):
+        parser = argparse.ArgumentParser()
+        parser.add_argument("expression", help="expression string")
+        parser.add_argument("var1", help="variable 1",
+                            type=float)
+        parser.add_argument("var2", help="variable 2",
+                            type=float)
+        parser.add_argument(
+            "--file", type=str, help="load a .txt file containing an expression and variables")
+
+        args = parser.parse_args()
+        print(args)
+        return vars(args)
+
+    def handle_inputs(self, args):
+        if args is None:
             print('You have not passed any commands in!')
+            return
+        if args["file"] is not None:
+            print "blah"
+            to_return = self.parse_file()
         else:
             to_return = []
-            for a in args:
+            for a in args.keys():
                 if a == '--help':
                     print('Basic command line program')
                     print('Options:')
@@ -26,10 +58,8 @@ class CmdLineParse:
                 elif a == '--veg':
                     print(random.choice(['Carrot', 'Potato', 'Turnip']))
                 else:
-                    a = self.to_num(a)
-                    to_return.append(a)
-        print(to_return)
-        return to_return
+                    return args
+            return to_return
 
     def get_expression(self):
         args = sys.argv

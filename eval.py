@@ -56,7 +56,8 @@ class ShuntingYard:
     def calculate(self, expression):
         operators = []
         values = []
-        s = re.findall('[\\^]|[+-/*//()]|\d+', expression)
+        s = re.findall(
+            r"[+*-/]| *(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?", expression)  # Find all numbers and operators
         for token in s:
             if self.is_number(token):
                 values.append(int(token))
@@ -81,12 +82,12 @@ class ShuntingYard:
         return values[0]
 
     def eval(self, expression, args):
-        expression = expression.replace('x', str(args[0]))
-        expression = expression.replace('y', str(args[1]))
+        expression = expression.replace('x', str(args["var1"]))
+        expression = expression.replace('y', str(args["var2"]))
 
         # nums_and_operators = self.seperate_operators_from_numbers(expression)
-        x = args[0]
-        y = args[1]
+        x = args["var1"]
+        y = args["var2"]
         print(x, y)
 
         answer = self.calculate(expression)
@@ -96,6 +97,7 @@ class ShuntingYard:
 cmd_parse = parse.CmdLineParse()
 expression = cmd_parse.get_expression()
 args = cmd_parse.get_inputs()
+cmd_parse.handle_inputs(args)
 # cmd_parse.do_calc(expression, args)
 args = cmd_parse.get_inputs()
 print(expression)
