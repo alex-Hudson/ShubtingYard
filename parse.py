@@ -34,7 +34,6 @@ class CmdLineParse:
             new_row['var2'] = row[1].strip()
             rows.append(new_row)
 
-        # ENH: will need changing to handle multiple lines in input file
         return rows
 
     def get_inputs(self):
@@ -44,7 +43,7 @@ class CmdLineParse:
             'expression', type=str, help="Expression to be evaluated")
         file_parser = argparse.ArgumentParser(parents=[parent_parser])
         file_parser.add_argument(
-            '--file', type=str, help=".txt file containing variables in x,y format. If no file is included, add two variables, x then y. E.g. 5x+2y 3 2 would execute to 14")
+            '--file', type=str, help=".txt file containing variables in x,y format. If no file is included, add two variables, x then y. E.g. 5x+2y 3 2 would execute to 19")
         args = file_parser.parse_known_args()
         args = vars(args[0])  # args[0] is the namespace
         self.expression = args["expression"]
