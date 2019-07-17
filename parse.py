@@ -64,20 +64,7 @@ class CmdLineParse:
         if args["file"] is not None:
             self.args = self.parse_file()
         else:
-            for a in args.keys():
-                if a == '--help':
-                    print('Basic command line program')
-                    print('Options:')
-                    print('    --help -> show this basic help menu.')
-                    print('    --monty -> show a Monty Python quote.')
-                    print('    --veg -> show a random vegetable')
-                elif a == '--monty':
-                    print(
-                        'What\'s this, then? "Romanes eunt domus"? People called Romanes, they go, the house?')
-                elif a == '--veg':
-                    print(random.choice(['Carrot', 'Potato', 'Turnip']))
-                else:
-                    self.args = args
+            self.args = args
 
     def do_calc(self, expression, args):
         # Do calc using eval for checking
