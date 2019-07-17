@@ -32,7 +32,6 @@ class CmdLineParse:
             new_row = {}
             new_row['var1'] = row[0].strip()
             new_row['var2'] = row[1].strip()
-            print(new_row)
             rows.append(new_row)
 
         # ENH: will need changing to handle multiple lines in input file
@@ -41,21 +40,22 @@ class CmdLineParse:
     def get_inputs(self):
         # Usze argparse lib to parse inputs
         parent_parser = argparse.ArgumentParser(add_help=False)
-        parent_parser.add_argument('expression', type=str)
+        parent_parser.add_argument(
+            'expression', type=str, help="Expression to be evaluated")
         file_parser = argparse.ArgumentParser(parents=[parent_parser])
-        file_parser.add_argument('--file', type=str)
+        file_parser.add_argument(
+            '--file', type=str, help=".txt file containing variables in x,y format. If no file is included, add two variables, x then y. E.g. 5x+2y 3 2 would execute to 14")
         args = file_parser.parse_known_args()
         args = vars(args[0])  # args[0] is the namespace
         self.expression = args["expression"]
 
         if args['file'] is None:
             variable_parser = argparse.ArgumentParser(parents=[parent_parser])
-            variable_parser.add_argument('var1', type=float)
-            variable_parser.add_argument('var2', type=float)
+            variable_parser.add_argument('var1', type=float, help="x variable")
+            variable_parser.add_argument('var2', type=float, help="y variable")
 
             variables = vars(variable_parser.parse_args())
             args.update(variables)
-        print(args)
 
         # If --file given, load from file, else load from data in cmd line
         if args is None:
