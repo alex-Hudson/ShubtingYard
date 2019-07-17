@@ -44,8 +44,8 @@ class CmdLineParse:
         parent_parser.add_argument('expression', type=str)
         file_parser = argparse.ArgumentParser(parents=[parent_parser])
         file_parser.add_argument('--file', type=str)
-        args, unknown = file_parser.parse_known_args()
-        args = vars(args)
+        args = file_parser.parse_known_args()
+        args = vars(args[0])  # args[0] is the namespace
         self.expression = args["expression"]
 
         if args['file'] is None:
@@ -65,33 +65,3 @@ class CmdLineParse:
             self.args = self.parse_file()
         else:
             self.args = args
-
-    def do_calc(self, expression, args):
-        # Do calc using eval for checking
-        x_range = self.get_range([], args[0], 'x')
-        self.range = self.get_range(x_range, args[1], 'y')
-        to_return = []
-        outputs = copy.deepcopy(self.range)
-        for index, inputs in enumerate(self.range):
-            x = inputs['x']
-            y = inputs['y']
-            to_return = eval(expression)
-            outputs[index]['calc'] = to_return
-        print(outputs[5]['calc'])
-        self.outputs = outputs
-
-    def get_range(self, number_range, number, key):
-        index = 0
-        for i in range(number-5, number+5):
-            try:
-                number_range[index]
-            except:
-                number_range.append({})
-            number_range[index][key] = i
-            index += 1
-        return number_range
-
-    def output(self):
-        for output in self.outputs:
-            print('x:', output['x'], 'y:', output['y'],
-                  'equals',  output['calc'])
