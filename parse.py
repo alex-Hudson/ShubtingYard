@@ -7,6 +7,7 @@ import csv
 
 
 class CmdLineParse:
+    # ENH: Handle n input variables and n input equations
     def __init__(self):
         # Class to parse arguments from command line
         args = self.get_inputs()
@@ -28,12 +29,13 @@ class CmdLineParse:
         for row in reader:
             new_row = {}
             new_row['expression'] = row[0]
-            new_row['var1'] = row[1]
-            new_row['var2'] = row[2]
+            new_row['var1'] = row[1].strip()
+            new_row['var2'] = row[2].strip()
             print(new_row)
             rows.append(new_row)
 
-        return rows
+        # ENH: will need changing to handle multiple lines in input file
+        return rows[0]
 
     def get_inputs(self):
         # Usze argparse lib to paarse inputs
@@ -57,9 +59,9 @@ class CmdLineParse:
             return
         if args["file"] is not None:
             print "blah"
-            to_return = self.parse_file()
+            self.args = self.parse_file()
+
         else:
-            to_return = []
             for a in args.keys():
                 if a == '--help':
                     print('Basic command line program')
