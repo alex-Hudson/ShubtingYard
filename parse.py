@@ -36,7 +36,7 @@ class CmdLineParse:
             rows.append(new_row)
 
         # ENH: will need changing to handle multiple lines in input file
-        return rows[0]
+        return rows
 
     def get_inputs(self):
         # Usze argparse lib to parse inputs
@@ -64,4 +64,4 @@ class CmdLineParse:
         if args["file"] is not None:
             self.args = self.parse_file()
         else:
-            self.args = args
+            self.args = [args]

@@ -79,15 +79,14 @@ class ShuntingYard:
         return values[0]
 
     def eval(self, expression, args):
-        x = args["var1"]
-        y = args["var2"]
-        expression = expression.replace('x', str(x))
-        expression = expression.replace('y', str(y))
-
-        print(x, y)
-
-        answer = self.calculate(expression)
-        print(answer)
+        for row in args:
+            x = row["var1"]
+            y = row["var2"]
+            tmp = expression.replace('x', str(x))
+            tmp = tmp.replace('y', str(y))
+            print(x, y)
+            answer = self.calculate(tmp)
+            print(answer)
 
 
 cmd_parse = parse.CmdLineParse()
