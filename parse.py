@@ -10,8 +10,7 @@ class CmdLineParse:
     # ENH: Handle n input variables and n input equations
     def __init__(self):
         # Class to parse arguments from command line
-        args = self.get_inputs()
-        self.handle_inputs(args)
+        self.get_inputs()
 
     @property
     # returns args
@@ -21,16 +20,18 @@ class CmdLineParse:
     @property
     # returns expression
     def expression(self):
-        return self.args["expression"]
+        if "expression" in self.args:
+            return self.args["expression"]
+        else:
+            return None
 
     def parse_file(self):
         reader = csv.reader(open('data.txt'), delimiter=',')
         rows = []
         for row in reader:
             new_row = {}
-            new_row['expression'] = row[0]
-            new_row['var1'] = row[1].strip()
-            new_row['var2'] = row[2].strip()
+            new_row['var1'] = row[0].strip()
+            new_row['var2'] = row[1].strip()
             print(new_row)
             rows.append(new_row)
 
@@ -38,29 +39,30 @@ class CmdLineParse:
         return rows[0]
 
     def get_inputs(self):
-        # Usze argparse lib to paarse inputs
-        parser = argparse.ArgumentParser()
-        parser.add_argument("expression", help="expression string")
-        parser.add_argument("var1", help="variable 1",
-                            type=float)
-        parser.add_argument("var2", help="variable 2",
-                            type=float)
-        parser.add_argument(
-            "--file", type=str, help="load a .txt file containing an expression and variables")
+        # Usze argparse lib to parse inputs
+        parent_parser = argparse.ArgumentParser(add_help=False)
+        parent_parser.add_argument('expression', type=str)
+        file_parser = argparse.ArgumentParser(parents=[parent_parser])
+        file_parser.add_argument('--file', type=str)
+        args, unknown = file_parser.parse_known_args()
+        args = vars(args)
+        self.expression = args["expression"]
 
-        args = parser.parse_args()
+        if args['file'] is None:
+            variable_parser = argparse.ArgumentParser(parents=[parent_parser])
+            variable_parser.add_argument('var1', type=float)
+            variable_parser.add_argument('var2', type=float)
+
+            variables = vars(variable_parser.parse_args())
+            args.update(variables)
         print(args)
-        return vars(args)
 
-    def handle_inputs(self, args):
         # If --file given, load from file, else load from data in cmd line
         if args is None:
             print('You have not passed any commands in!')
             return
         if args["file"] is not None:
-            print "blah"
             self.args = self.parse_file()
-
         else:
             for a in args.keys():
                 if a == '--help':
