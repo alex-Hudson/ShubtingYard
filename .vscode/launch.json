@@ -10,7 +10,8 @@
       "request": "launch",
       "program": "${file}",
       "console": "integratedTerminal",
-      "args": ["5**(x+y)", "--file", "data.txt"]
+      "externalConsole": true,
+      "args": ["5**(x+y)", "<", "data.txt"]
     }
   ]
 }

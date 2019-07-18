@@ -4,7 +4,7 @@ import copy
 import argparse
 import json
 import csv
-
+import re
 
 class InputParser:
     # Reads lines from a stream and extras vareiable values
@@ -22,4 +22,10 @@ class InputParser:
         # vars    Dict of variable values
 
         for line in self.strm:
-            yield line, {}  # STUB
+            line = line.rstrip()
+            # splits string into dict of x:num,y:num 
+            # ENH do for any variable name and any number of variables
+            vars = dict((x.strip(), y.strip()) for x, y in (
+                element.split('=') for element in line.split(', ')))
+
+            yield line, vars

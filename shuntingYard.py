@@ -3,10 +3,7 @@ import re
 
 class ShuntingYard:
     precedences = {'+': 0, '-': 0, '*': 1, '/': 1, '**': 2, "^": 2}
-
-    def __init__(self, expression, args):
-        self.eval(expression, args)
-
+    
     def is_number(self, input):
         try:
             float(input)
@@ -75,11 +72,6 @@ class ShuntingYard:
         return values[0]
 
     def eval(self, expression, args):
-        for row in args:
-            x = row["var1"]
-            y = row["var2"]
-            tmp = expression.replace('x', str(x))
-            tmp = tmp.replace('y', str(y))
-            print(x, y)
-            answer = self.calculate(tmp)
-            print(answer)
+        tmp = expression.replace('x', args['x'])
+        tmp = tmp.replace('y', args['y'])
+        return self.calculate(tmp)

@@ -18,9 +18,9 @@ arg_parser.add_argument(
 args = arg_parser.parse_args(sys.argv[1:])
 print(args.expression)
 
-#engine = ShuntingYard(args.expression)
+engine = ShuntingYard()
 input_parser = InputParser(sys.stdin)
 
 # Evaluate on input
 for line, vars in input_parser.items():
-    print line  # , "=>", engine.eval(vars)
+    print line, "=>", engine.eval(args.expression,vars)
