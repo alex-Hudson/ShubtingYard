@@ -1,0 +1,5 @@
+expression = 5*a+b+c
+Using my func: 68.0
+Using inbuilt func: 68.0
+Using my func: 30.0
+Using inbuilt func: 30.0

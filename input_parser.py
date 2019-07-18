@@ -24,7 +24,6 @@ class InputParser:
         for line in self.strm:
             line = line.rstrip()
             # splits string into dict of var_name:num 
-            vars = dict((key.strip(), value.strip()) for key, value in (
-                element.split('=') for element in line.split(', ')))
+            vars = dict((key.strip(), value.strip()) for key, value in (element.split('=') for element in line.split(',')))
 
             yield line, vars
