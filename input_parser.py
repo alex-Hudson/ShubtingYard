@@ -23,9 +23,8 @@ class InputParser:
 
         for line in self.strm:
             line = line.rstrip()
-            # splits string into dict of x:num,y:num 
-            # ENH do for any variable name and any number of variables
-            vars = dict((x.strip(), y.strip()) for x, y in (
+            # splits string into dict of var_name:num 
+            vars = dict((key.strip(), value.strip()) for key, value in (
                 element.split('=') for element in line.split(', ')))
 
             yield line, vars
