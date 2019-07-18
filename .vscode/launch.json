@@ -11,7 +11,7 @@
       "program": "${file}",
       "console": "integratedTerminal",
       "externalConsole": true,
-      "args": ["5**(x+y)", "<", "data.txt"]
+      "args": ["5*(a+b) + c + d", "<", "data.txt"]
     }
   ]
 }

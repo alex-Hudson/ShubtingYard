@@ -7,7 +7,7 @@ import csv
 import re
 
 class InputParser:
-    # Reads lines from a stream and extras vareiable values
+    # Reads lines from a stream and extras variable values
 
     # ENH: Handle n input variables and n input equations
     def __init__(self, strm):

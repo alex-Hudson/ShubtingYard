@@ -1,9 +1,9 @@
 import re
 
 
-class ShuntingYard:
+class ShuntingYardEngine:
     precedences = {'+': 0, '-': 0, '*': 1, '/': 1, '**': 2, "^": 2}
-    
+
     def is_number(self, input):
         try:
             float(input)
@@ -72,6 +72,7 @@ class ShuntingYard:
         return values[0]
 
     def eval(self, expression, args):
-        tmp = expression.replace('x', args['x'])
-        tmp = tmp.replace('y', args['y'])
-        return self.calculate(tmp)
+        variables_in_ex = re.findall("[a-zA-Z]+", expression)
+        for var in variables_in_ex:
+            expression = expression.replace(var, args[var])
+        return self.calculate(expression)
