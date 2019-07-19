@@ -2,13 +2,18 @@ class Branch():
     # Branch of stack, can insert left and right, and set root node value
     def __init__(self):
         # Create empty tree
-        self.tree={}
+        self.type = type
+        self.value = value
+        self.parentNode = None
+        self.leftBranch = None
+        self.rightBranch = None
+               
 
     def insert_left(self, input):
-        self.tree['left']=input
+        self.leftBranch=input
 
     def insert_right(self, input):
-        self.tree['right']=input
+        self.rightBranch=input
 
     def get_left_child(self):
         print 'left'
@@ -17,14 +22,10 @@ class Branch():
         print 'right'
 
     def set_root_value(self, value):
-        print 'root'
+        self.parentNode=value
 
     def get_parent(self):
         print 'parent'
-    
-    def set_parent(self, parent):
-        print 'set parent'
+     
 
-    def create_branch(self):
-        print 'create branch'
 
