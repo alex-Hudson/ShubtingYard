@@ -1,34 +1,42 @@
+from branch import Branch
+import re
+
 class ParseTree():
     ##
     # Takes expression and returns BNF form via buildParseTree
     ##
     def __init__(self, expression):
         self.expression = expression
+        self.tree=Branch() #init empty tree
 
     def buildParseTree(self):
-        fplist = self.expression.split()
-        tree={}
-        current_branch = {}
+        # Find all numbers and operators and put into list
+        fplist = re.findall(
+            r"[+*-/()\^]| *(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?", self.expression)
+        tree = self.tree
 
         for i in fplist:
             if i == '(':
-                current_branch.insertLeft('')
-                tree.push(current_branch)
-                current_branch = current_branch.getLeftChild()
+                current_branch = tree.create_branch()
+                current_branch.insert_left('')
+                tree.set_parent(current_branch)
+                current_branch = current_branch.get_left_child()
 
             elif i in ['+', '-', '*', '/']:
-                current_branch.setRootVal(i)
-                current_branch.insertRight('')
-                tree.push(currentTree)
-                current_branch = current_branch.getRightChild()
+                current_branch = tree
+                current_branch.set_root_value(i)
+                current_branch.insert_right('')
+                tree.set_parent(current_branch)
+                current_branch = current_branch.get_right_child()
 
             elif i == ')':
-                current_branch = tree.pop()
+                current_branch = tree.get_parent()
 
             elif i not in ['+', '-', '*', '/', ')']:
                 try:
-                    current_branch.setRootVal(int(i))
-                    parent = tree.pop()
+                    current_branch = tree
+                    current_branch.set_root_value(int(i))
+                    parent = tree.get_parent()
                     current_branch = parent
 
                 except ValueError:
@@ -40,10 +48,3 @@ parse_tree=ParseTree("3+4*5")
 pt = parse_tree.buildParseTree()
 #pt.postorder()  #defined and explained in the next section
 
-class Branch():
-    # Branch of stack, can insert left and right, and set root node value
-    def __init__(self):
-
-    def insert_left(self):
-
-    def insert_right(self):
